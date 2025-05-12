@@ -1,0 +1,53 @@
+ASSIGNMENT 1: Codecademy Learners Mockup Data
+
+SELECT * FROM users; 
+
+SELECT * FROM progress;
+
+SELECT email_domain,
+COUNT(*) FROM users WHERE email_domain LIKE '%.edu'
+GROUP BY 1 ORDER BY 2 DESC 
+LIMIT 25;
+
+SELECT COUNT(*) FROM users 
+WHERE email_domain LIKE '%.edu' AND city = 'New York';
+
+SELECT COUNT(*) AS mobilecount
+FROM users WHERE mobile_app IS NOT NULL;
+
+SELECT sign_up_at, strftime ('%H', sign_up_at) AS 'hour',
+COUNT(*) AS 'Users_Signed_in'
+FROM users GROUP BY hour ORDER BY hour DESC;
+
+WITH schools AS (
+	SELECT users.email_domain AS "email", 
+		progress.learn_cpp is NOT NULL AS "cpp", 
+		progress.learn_html is NOT NULL AS "html", 
+		progress.learn_java is NOT NULL AS "java", 
+		progress.learn_javascript is NOT NULL AS "js", 
+		progress.learn_sql is NOT NULL AS "sql"
+FROM users 
+JOIN progress
+on users.user_id = progress.user_id)
+SELECT email, sum(cpp), sum(html), sum(java), sum(js), sum(sql)
+FROM schools
+WHER email LIKE "%.edu"
+GROUP BY 1 ORDER BY 1 DESC;
+
+WITH schools AS (
+SELECT users.city AS "city",
+		progress.learn_cpp is NOT NULL AS "cpp",
+		progress.learn_html is NOT NULL AS "html", 
+		progress.learn_java is NOT NULL AS "java", 
+		progress.learn_javascript is NOT NULL AS "js",
+		progress.learn_sql is NOT NULL AS "sql"
+FROM users
+JOIN progress
+ON users.user_id = progress.user_id)
+select city, sum(cpp), sum(html), sum(java), sum(js), sum(sql)
+FROM schools
+GROUP BY 1
+HAVING city = "New York" or city = "Chicago";
+
+
+
